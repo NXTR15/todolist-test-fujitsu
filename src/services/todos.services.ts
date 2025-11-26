@@ -20,11 +20,6 @@ export async function getTodos(): Promise<Todo[]> {
   return categorizedTodos;
 }
 
-export async function getTodosByStatus(completed?: boolean): Promise<Todo[]> {
-  const allTodos = await getTodos();
-  return allTodos.filter((todo) => todo.completed === completed);
-}
-
 export async function addTodo(payload: {
   id: number;
   userId: number;

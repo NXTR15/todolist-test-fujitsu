@@ -4,11 +4,12 @@ import type { AppDispatch, RootState } from "../../store/store";
 import {
   addTodoRequest,
   deleteTodoRequest,
-  fetchTodosByStatusRequest,
+  fetchTodosByFilterRequest,
+  fetchTodosByFilterSuccess,
   fetchTodosRequest,
   updateTodoRequest,
 } from "../../store/slices/todoSlice";
-import LoadingAnim from "../../organism/LoadingAnim";
+import LoadingAnim from "../organism/LoadingAnim";
 
 export default function TodosPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,6 +21,8 @@ export default function TodosPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
   const [selectStatus, setSelectStatus] = useState<string>("All");
+  const [selectCategoryForSearch, setSelectCategoryForSearch] =
+    useState<string>("All");
   const [selectCategory, setSelectCategory] = useState<string>("Others");
 
   const addTodo = () => {
@@ -58,13 +61,29 @@ export default function TodosPage() {
   }
 
   const loadTodos = () => {
-    if (selectStatus === "All") {
-      dispatch(fetchTodosRequest());
-    } else if (selectStatus === "true") {
-      dispatch(fetchTodosByStatusRequest(true));
-    } else if (selectStatus === "false") {
-      dispatch(fetchTodosByStatusRequest(false));
-    }
+    dispatch(fetchTodosRequest());
+  };
+
+  const loadByFilter = () => {
+    const filters = {
+      status:
+        selectStatus === "true"
+          ? true
+          : selectStatus === "false"
+          ? false
+          : undefined,
+      category:
+        selectCategoryForSearch === "All"
+          ? undefined
+          : (selectCategoryForSearch as "Productive" | "Personal" | "Others"),
+    };
+
+    const noFilter =
+      filters.status === undefined && filters.category === undefined;
+
+    dispatch(
+      noFilter ? fetchTodosRequest() : fetchTodosByFilterRequest(filters)
+    );
   };
 
   const saveUpdate = (id: number) => {
@@ -102,8 +121,17 @@ export default function TodosPage() {
           <option value="true">Completed</option>
           <option value="false">Pending</option>
         </select>
+        <select
+          value={selectCategoryForSearch}
+          onChange={(e) => setSelectCategoryForSearch(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Productive">Productive</option>
+          <option value="Personal">Personal</option>
+          <option value="Others">Others</option>
+        </select>
         <button
-          onClick={loadTodos}
+          onClick={loadByFilter}
           className="bg-blue-500 text-white py-2 px-4 rounded mr-5"
         >
           Search

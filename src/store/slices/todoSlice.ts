@@ -24,15 +24,35 @@ const todoSlice = createSlice({
       state.error = action.payload;
     },
 
-    fetchTodosByStatusRequest: (state, action: PayloadAction<boolean>) => {
+    fetchTodosByFilterRequest: (
+      state,
+      action: PayloadAction<{
+        status?: boolean;
+        category?: "Productive" | "Personal" | "Others";
+      }>
+    ) => {
       state.loading = true;
       state.error = null;
     },
-    fetchTodosByStatusSuccess: (state, action: PayloadAction<Todo[]>) => {
+    fetchTodosByFilterSuccess: (
+      state,
+      action: PayloadAction<{
+        status?: boolean;
+        category?: "Productive" | "Personal" | "Others";
+      }>
+    ) => {
       state.loading = false;
-      state.todos = action.payload;
+      state.todos = state.todos.filter((todo) => {
+        const statusMatch =
+          action.payload.status === undefined ||
+          todo.completed === action.payload.status;
+        const categoryMatch =
+          action.payload.category === undefined ||
+          todo.category === action.payload.category;
+        return statusMatch && categoryMatch;
+      });
     },
-    fetchTodosByStatusFailure: (state, action: PayloadAction<string>) => {
+    fetchTodosByFilterFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -64,7 +84,7 @@ const todoSlice = createSlice({
         id: number;
         title: string;
         completed: boolean;
-        category: "Produtive" | "Personal" | "Others";
+        category: "Productive" | "Personal" | "Others";
       }>
     ) => {
       state.loading = true;
@@ -98,9 +118,9 @@ export const {
   fetchTodosRequest,
   fetchTodosSuccess,
   fetchTodosFailure,
-  fetchTodosByStatusRequest,
-  fetchTodosByStatusSuccess,
-  fetchTodosByStatusFailure,
+  fetchTodosByFilterRequest,
+  fetchTodosByFilterSuccess,
+  fetchTodosByFilterFailure,
   addTodoRequest,
   addTodoSuccess,
   addTodoFailure,
