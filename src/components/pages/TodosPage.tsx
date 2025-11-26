@@ -21,7 +21,7 @@ export default function TodosPage() {
   const [selectStatus, setSelectStatus] = useState<string>("All");
 
   const addTodo = () => {
-    if (newTodoTitle.trim() === "") return;
+    if (newTodoTitle.trim() === "") alert("Title cannot be empty");
     if (newTodoUserId === null) return;
     dispatch(
       addTodoRequest({
@@ -66,6 +66,10 @@ export default function TodosPage() {
   };
 
   const saveUpdate = (id: number) => {
+    if (editingTitle.trim() === "") {
+      alert("Title cannot be empty");
+      return;
+    }
     const todo = todos.find((t) => t.id === id);
     if (todo) {
       const updatedTodo = { ...todo, title: editingTitle };
@@ -91,12 +95,18 @@ export default function TodosPage() {
         <select
           value={selectStatus === null ? "" : selectStatus}
           onChange={(e) => setSelectStatus(e.target.value)}
+          className="mr-5"
         >
           <option value="All">All</option>
           <option value="true">Completed</option>
           <option value="false">Pending</option>
         </select>
-        <button onClick={loadTodos}>Search</button>
+        <button
+          onClick={loadTodos}
+          className="bg-blue-500 text-white py-2 px-4 rounded mr-5"
+        >
+          Search
+        </button>
       </div>
       {loading ? (
         <p>Loading...</p>
@@ -141,7 +151,7 @@ export default function TodosPage() {
               </tr>
             </thead>
             <tbody>
-              {todos.map((todo) => (
+              {todos.slice(0, 20).map((todo) => (
                 <tr key={todo.id} className="border-t">
                   {editingId === todo.id ? (
                     <td className="px-4 py-2">
