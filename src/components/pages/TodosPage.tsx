@@ -5,7 +5,6 @@ import {
   addTodoRequest,
   deleteTodoRequest,
   fetchTodosByFilterRequest,
-  fetchTodosByFilterSuccess,
   fetchTodosRequest,
   updateTodoRequest,
 } from "../../store/slices/todoSlice";
