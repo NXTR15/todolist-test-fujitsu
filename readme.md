@@ -19,14 +19,14 @@ Proyek ini memiliki beberapa fitur berikut:
 - Menambahkan Todo baru
 - Menghapus Todo
 - Mengedit Todo dan menandai Todo sebagai selesai
-- Filter Todo berdasarkan status
+- Filter Todo berdasarkan status dan kategori
 - Animasi loading sederhana
 
 ---
 
 ## Tangkapan Layar Aplikasi
 
-![alt text](./screenshoot/image.png)  
+![alt text](./screenshoot/image3.png)  
 ![alt text](./screenshoot/image-1.png)  
 ![alt text](./screenshoot/image-2.png)
 
