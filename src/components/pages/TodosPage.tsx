@@ -8,6 +8,7 @@ import {
   fetchTodosRequest,
   updateTodoRequest,
 } from "../../store/slices/todoSlice";
+import LoadingAnim from "../../organism/LoadingAnim";
 
 export default function TodosPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,7 @@ export default function TodosPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
   const [selectStatus, setSelectStatus] = useState<string>("All");
+  const [selectCategory, setSelectCategory] = useState<string>("Others");
 
   const addTodo = () => {
     if (newTodoTitle.trim() === "") alert("Title cannot be empty");
@@ -29,7 +31,7 @@ export default function TodosPage() {
         userId: newTodoUserId,
         title: newTodoTitle,
         completed: false,
-        category: "Others",
+        category: selectCategory as "Productive" | "Personal" | "Others",
       })
     );
     setNewTodoTitle("");
@@ -91,11 +93,10 @@ export default function TodosPage() {
 
   return (
     <div>
-      <div>
+      <div className="flex flex-row gap-5 mb-5">
         <select
           value={selectStatus === null ? "" : selectStatus}
           onChange={(e) => setSelectStatus(e.target.value)}
-          className="mr-5"
         >
           <option value="All">All</option>
           <option value="true">Completed</option>
@@ -109,25 +110,33 @@ export default function TodosPage() {
         </button>
       </div>
       {loading ? (
-        <p>Loading...</p>
+        <LoadingAnim />
       ) : error ? (
         <p>Error: {error}</p>
       ) : (
-        <div>
+        <div className="flex flex-col gap-5">
           <div className="flex flex-row gap-2">
             <input
               value={newTodoTitle}
               onChange={(e) => setNewTodoTitle(e.target.value)}
               placeholder="New todo"
-              className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+              className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block px-3 py-2.5 shadow-xs "
             />
             <input
               type="number"
               value={newTodoUserId ?? ""}
               onChange={(e) => setNewTodoUserId(Number(e.target.value))}
               placeholder="User id"
-              className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+              className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block px-3 py-2.5 shadow-xs"
             />
+            <select
+              value={selectCategory}
+              onChange={(e) => setSelectCategory(e.target.value)}
+            >
+              <option value="Productive">Productive</option>
+              <option value="Personal">Personal</option>
+              <option value="Others">Others</option>
+            </select>
             <button
               onClick={addTodo}
               className="bg-blue-500 text-white py-2 px-4 rounded"
@@ -135,8 +144,8 @@ export default function TodosPage() {
               Add
             </button>
           </div>
-          <table className="w-screen md:table-fixed overflow-hidden table-auto">
-            <thead>
+          <table className="w-full md:table-fixed overflow-hidden table-auto">
+            <thead className="bg-slate-400">
               <tr>
                 <th className="px-4 py-2 text-left text-lg font-semibold">
                   Title
@@ -151,7 +160,7 @@ export default function TodosPage() {
               </tr>
             </thead>
             <tbody>
-              {todos.slice(0, 20).map((todo) => (
+              {todos.map((todo) => (
                 <tr key={todo.id} className="border-t">
                   {editingId === todo.id ? (
                     <td className="px-4 py-2">
@@ -180,7 +189,7 @@ export default function TodosPage() {
                     </button>
                   </td>
                   {editingId === todo.id ? (
-                    <td className="px-4 py-2">
+                    <td className="">
                       <button
                         onClick={() => saveUpdate(todo.id)}
                         className="bg-blue-500 text-white py-2 px-4 rounded mr-5"
@@ -195,7 +204,7 @@ export default function TodosPage() {
                       </button>
                     </td>
                   ) : (
-                    <td className="px-4 py-2">
+                    <td className="flex flex-row justify-center items-center">
                       <button
                         onClick={() => {
                           setEditingId(todo.id);

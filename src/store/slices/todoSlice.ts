@@ -44,7 +44,7 @@ const todoSlice = createSlice({
         userId: number;
         title: string;
         completed: boolean;
-        category: "Produtive" | "Personal" | "Others";
+        category: "Productive" | "Personal" | "Others";
       }>
     ) => {
       state.loading = true;
