@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { BACKEND_URL } from "./src/utils/config";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: `${BACKEND_URL}`,
+        target: `https://jsonplaceholder.typicode.com`,
         changeOrigin: true,
         secure: false,
       },

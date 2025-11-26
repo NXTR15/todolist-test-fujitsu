@@ -1,21 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
-import uiReducer from "../store/slices/uiSlice";
-import authReducer from "../store/slices/authSlice";
+import todoReducer from "../store/slices/todoSlice";
+import createSagaMiddleware from "redux-saga";
+import { rootSaga } from "./rootSaga";
 
-/* Configure the store to store more than one reducers an states
- * This store will decide which reducer will run based on the given data or action
- * Exporting store so it can be "opened" by Redux Provider in App.tsx
- */
+const sagaMiddleware = createSagaMiddleware();
+
 export const storeRouting = configureStore({
-  /* reducers store here */
   reducer: {
-    ui: uiReducer,
-    auth: authReducer,
+    todo: todoReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
 });
 
-/* Exporting all states type from store (number, custom, string, etc)*/
-export type RootState = ReturnType<typeof storeRouting.getState>;
+sagaMiddleware.run(rootSaga);
 
-/* Export store dispatch (For each components use this store then referenced to this dispatch) */
+export type RootState = ReturnType<typeof storeRouting.getState>;
 export type AppDispatch = typeof storeRouting.dispatch;
