@@ -3,7 +3,7 @@ export interface Todo {
   id: number;
   title: string;
   completed: boolean;
-  category: "Produtive" | "Personal" | "Others";
+  category: "Productive" | "Personal" | "Others";
 }
 
 export interface TodosState {

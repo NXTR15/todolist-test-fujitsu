@@ -30,7 +30,7 @@ export async function addTodo(payload: {
   userId: number;
   title: string;
   completed: boolean;
-  category: "Produtive" | "Personal" | "Others";
+  category: "Productive" | "Personal" | "Others";
 }): Promise<Todo> {
   const response: Todo = {
     id: payload.id,
