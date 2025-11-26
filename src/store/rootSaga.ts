@@ -1,6 +1,6 @@
 import { all } from "redux-saga/effects";
-import { todoSaga } from "./todoSaga";
+import { watchTodoSaga } from "./watchTodoSaga";
 
 export function* rootSaga() {
-  yield all([todoSaga()]);
+  yield all([watchTodoSaga()]);
 }

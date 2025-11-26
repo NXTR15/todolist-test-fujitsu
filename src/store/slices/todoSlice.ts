@@ -24,6 +24,19 @@ const todoSlice = createSlice({
       state.error = action.payload;
     },
 
+    fetchTodosByStatusRequest: (state, action: PayloadAction<boolean>) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchTodosByStatusSuccess: (state, action: PayloadAction<Todo[]>) => {
+      state.loading = false;
+      state.todos = action.payload;
+    },
+    fetchTodosByStatusFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     addTodoRequest: (
       state,
       action: PayloadAction<{
@@ -85,6 +98,9 @@ export const {
   fetchTodosRequest,
   fetchTodosSuccess,
   fetchTodosFailure,
+  fetchTodosByStatusRequest,
+  fetchTodosByStatusSuccess,
+  fetchTodosByStatusFailure,
   addTodoRequest,
   addTodoSuccess,
   addTodoFailure,

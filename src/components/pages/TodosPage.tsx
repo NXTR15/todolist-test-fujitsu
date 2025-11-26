@@ -4,6 +4,7 @@ import type { AppDispatch, RootState } from "../../store/store";
 import {
   addTodoRequest,
   deleteTodoRequest,
+  fetchTodosByStatusRequest,
   fetchTodosRequest,
   updateTodoRequest,
 } from "../../store/slices/todoSlice";
@@ -17,6 +18,7 @@ export default function TodosPage() {
   const [newTodoUserId, setNewTodoUserId] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
+  const [selectStatus, setSelectStatus] = useState<string>("All");
 
   const addTodo = () => {
     if (newTodoTitle.trim() === "") return;
@@ -54,7 +56,13 @@ export default function TodosPage() {
   }
 
   const loadTodos = () => {
-    dispatch(fetchTodosRequest());
+    if (selectStatus === "All") {
+      dispatch(fetchTodosRequest());
+    } else if (selectStatus === "true") {
+      dispatch(fetchTodosByStatusRequest(true));
+    } else if (selectStatus === "false") {
+      dispatch(fetchTodosByStatusRequest(false));
+    }
   };
 
   const saveUpdate = (id: number) => {
@@ -79,6 +87,17 @@ export default function TodosPage() {
 
   return (
     <div>
+      <div>
+        <select
+          value={selectStatus === null ? "" : selectStatus}
+          onChange={(e) => setSelectStatus(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="true">Completed</option>
+          <option value="false">Pending</option>
+        </select>
+        <button onClick={loadTodos}>Search</button>
+      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (

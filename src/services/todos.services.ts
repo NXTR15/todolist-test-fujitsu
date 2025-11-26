@@ -6,17 +6,23 @@ export async function getTodos(): Promise<Todo[]> {
 
   const categories = ["Productive", "Personal", "Others"] as const;
 
-  const categorizedTodos: Todo[] = response.data.map((td: Todo) => {
-    const randomCategory =
-      categories[Math.floor(Math.random() * categories.length)];
+  const categorizedTodos: Todo[] = response.data.map(
+    (td: Todo, index: number) => {
+      const category = categories[index % categories.length];
 
-    return {
-      ...td,
-      category: randomCategory,
-    };
-  });
+      return {
+        ...td,
+        category,
+      };
+    }
+  );
 
   return categorizedTodos;
+}
+
+export async function getTodosByStatus(completed?: boolean): Promise<Todo[]> {
+  const allTodos = await getTodos();
+  return allTodos.filter((todo) => todo.completed === completed);
 }
 
 export async function addTodo(payload: {

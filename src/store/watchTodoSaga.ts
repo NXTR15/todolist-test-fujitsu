@@ -4,6 +4,7 @@ import {
   addTodo,
   deleteTodo,
   getTodos,
+  getTodosByStatus,
   updateTodo,
 } from "../services/todos.services";
 import {
@@ -13,6 +14,9 @@ import {
   deleteTodoFailure,
   deleteTodoRequest,
   deleteTodoSuccess,
+  fetchTodosByStatusFailure,
+  fetchTodosByStatusRequest,
+  fetchTodosByStatusSuccess,
   fetchTodosFailure,
   fetchTodosRequest,
   fetchTodosSuccess,
@@ -27,6 +31,15 @@ function* fetchTodosSaga(): Generator<any, any, any> {
     yield put(fetchTodosSuccess(todos));
   } catch (error) {
     yield put(fetchTodosFailure("Failed to fetch todos"));
+  }
+}
+
+function* fetchTodosByStatusSaga(action: any): Generator<any, any, any> {
+  try {
+    const todos: Todo[] = yield call(getTodosByStatus, action.payload);
+    yield put(fetchTodosByStatusSuccess(todos));
+  } catch (error) {
+    yield put(fetchTodosByStatusFailure("Failed to fetch todos"));
   }
 }
 
@@ -57,8 +70,9 @@ function* deleteTodoSaga(action: any): Generator<any, any, any> {
   }
 }
 
-export function* todoSaga() {
+export function* watchTodoSaga() {
   yield takeLatest(fetchTodosRequest.type, fetchTodosSaga);
+  yield takeLatest(fetchTodosByStatusRequest.type, fetchTodosByStatusSaga);
   yield takeLatest(addTodoRequest.type, addTodoSaga);
   yield takeLatest(updateTodoRequest.type, updateTodoSaga);
   yield takeLatest(deleteTodoRequest.type, deleteTodoSaga);
